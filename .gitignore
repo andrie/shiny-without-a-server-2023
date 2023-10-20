@@ -5,3 +5,4 @@ _publish
 README.html
 README_files
 site_libs
+.venv

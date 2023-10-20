@@ -1,6 +1,8 @@
 project:
   type: website
   title: "Introduction to webR"
+  preview:
+    port: 6969
 
 
 

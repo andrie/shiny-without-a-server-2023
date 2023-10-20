@@ -1,6 +1,6 @@
 ---
-title: "<img alt='webR logo' width='700px' src='images/webr-shiny.png'></img><br>Shiny Without a Server:<br>webR & Shinylive"
-author: "George Stagg<br>Senior Software Engineer, Posit PBC"
+title: "<img alt='webR logo' width='700px' src='images/webr-shiny.png'></img><br>Shiny Without a Server:<br><code>webR</code> & <code>shinylive</code>"
+author: "Andrie de Vries, Posit PBC"
 format:
   revealjs:
     theme:
@@ -22,176 +22,24 @@ filters:
 ```{=html}
 <script src="webr-reveal.js"></script>
 ```
-
 But what is a "server" anyhow?
 
 ## Traditional Shiny architecture
 
 A server is a machine, connected to the Internet, that runs 24/7 ready to run your Shiny app.
 
-. . .
 
 ::: {style="text-align: center;"}
-
 ![](images/server-side.png){style="width:55%"}
-
 :::
 
-## Some Shiny app servers
 
-On-prem:
-
- * A workstation, under a desk, running [RStudio](https://posit.co/products/open-source/rstudio/)
- * A server, in a rack, running [Shiny Server](https://posit.co/products/open-source/shinyserver/)
- * [Posit Connect](https://posit.co/products/enterprise/connect/) enterprise hosting
-
-. . .
-
-Cloud:
-
- * [ShinyApps.io](shinyapps.io)
- * Posit on [Hugging Face](https://huggingface.co/posit)
- * [AWS](https://aws.amazon.com)/[Google Cloud](https://cloud.google.com)/[Azure](https://azure.microsoft.com) enterprise cloud hosting
-
-## Static web hosting
-
-Some web services offer an excellent mix of scalability, features, and cost:
-
-* [Github Pages](https://pages.github.com)
-* [Netlify](https://www.netlify.com)
-* [Cloudflare Pages](https://www.netlify.com)
-* [Vercel](https://vercel.com)
-* [Quarto Pub](https://quartopub.com)
-* Probably lots more...
-
-. . .
-
-However, they can't run traditional Shiny apps!
-
-This is [static]{.em} hosting. No way to run dynamic R or Python code.
-
-. . .
-
-<br>
-Wouldn't it be great if we could run Shiny apps using static hosting?
+<br> Wouldn't it be great if we could run Shiny apps using static hosting?
 
 ## Shinylive architecture
 
 ::: {style="text-align: center;"}
-
 ![](images/client-side.png){style="width:55%"}
-
-:::
-
-## &nbsp; {background-image="images/ibm.jpg"}
-
-## &nbsp; {background-image="images/phone.jpg"}
-
-
-# How does it work?
-Some technical details
-
-## WebAssembly (2017)
-
-::: columns
-::: {.column width="50%"}
--   A portable binary code format
--   Enables high-performance applications on web pages
--   Near-native execution speed
--   Supported by most modern browsers
-:::
-
-::: {.column width="50%" style="text-align:center"}
-![](images/wasm.svg){style="width:50%"}
-:::
-:::
-
-. . .
-
-Benefits of Wasm:
-
-::: columns
-::: {.column width="55%"}
-
--   Containerisation 
-
--   Notebook & literate programming
-
--   Universal Binaries
-
-:::
-
-::: {.column width="45%"}
-
--   Sandboxing
-
--   Numerical Reproducibility
-
--   Mobile / Tablet computing
-
-:::
-:::
-
-
-## Emscripten (2012)
-
-::: columns
-
-::: {.column width="40%"}
-![](images/emcc.png){style="width:60%; margin-left: 20%"}
-:::
-
-::: {.column width="60%"}
--   C/C++ compiler for WebAssembly
--   Based on LLVM/Clang
--   Originally designed for ASM.js in web browsers (predates Wasm!)
--   Compiler toolchain for many browser based Wasm projects: <br> SQLite, FFmpeg, DOSBox, ...
-:::
-:::
-
-. . .
-
-Emscripten takes C or C++ source code as input, provides a Unix-like environment, and produces Wasm as output
-
-## Difficulties of Wasm
-
-Observation: Many programming language interpreters are written in C or C++ for Unix/Linux...
-
-. . .
-
-BUT: For something like Python or R it's harder than it first seems
-
-* Standard & support libraries (e.g. linear algebra)
-
-* Legacy Fortran code
-
-* Graphics & font support
-
-* Network sockets
-
-* Local file I/O
-
-* Threading and forking
-
-* Limited methods to wait for input
-
-. . .
-
-Wasm/Emscripten [looks]{.em} like Unix, but browser security limitations are always there.
-
-We have to work around them, replacing standard OS tools with the provided browser APIs. 
-
-
-## Pyodide
-
-![](images/pyodide.png){alt="The pyodide logo" height="350" fig-align="center"}
-
-::: {style="text-align: center"}
-[Pyodide](https://pyodide.org/en/stable/) is a port of CPython to WebAssembly
-
-<br>Pyodide makes it possible to [install and run Python packages in the browser]{.em}
-
-Supported scientific packages include numpy, pandas, scipy, matplotlib, and scikit-learn.
 :::
 
 
@@ -208,58 +56,44 @@ Execute R code directly in a web browser, [without a supporting R server]{.em}
 :::
 
 # Uses for webR without Shiny
+
 We'll come back to Shiny apps later!
 
-## WebR Demo Application <span style="font-size: 50%">🔗 <https://webr.r-wasm.org/v0.2.1/></span>
+## WebR Demo Application [🔗 <https://webr.r-wasm.org/v0.2.1/>]{style="font-size: 50%"}
 
 <iframe class="web zoomed" allow="cross-origin-isolated" width="80%" height="70%" src="https://webr.r-wasm.org/v0.2.1/">
 
 </iframe>
 
-## Features
-
--   R code editor, multi document support, syntax highlighting
-
--   Context aware autocompletion
-
--   Folder and file management tools
-
--   Mulitple plots, manage and clear plot history
-
--   Screenreader support in R console
-
--   Works on wide-ranging devices: mobile, tablet, chomebook
 
 ## The webR Quarto extension
 
 -   Knowledge of web development is not required to use webR in your own content
 
-::: {style="text-align: center"}
-![](images/webr.gif){style="width: 80%; border: 1px solid #889; box-shadow: 2px 2px 15px #889;"}
-:::
+:::: {.columns}
 
-::: {style="text-align: right"}
-<small>[coatless/quarto-webr](https://github.com/coatless/quarto-webr) --- James Balamuta</small>
-:::
+::: {.column width="50%"}
+In a terminal:
+<br>
 
-## The webR Quarto extension
-
-In a terminal,
-
-```{.bash style="font-size: 200%; margin-top:0em;"}
+``` shell
 quarto add coatless/quarto-webr
 ```
 
-<br>In a Quarto doc,
 
-````{.md style="font-size: 150%; margin-top:0em;"}
+<br>
+In a Quarto doc:
+
+```` markdown
 ```{webr-r}
 fit = lm(mpg ~ am, data = mtcars)
 summary(fit)
 ```
 ````
+:::
 
-## Live and interactive R code
+::: {.column width="50%"}
+This is it:
 
 ```{=html}
 <script>
@@ -267,11 +101,19 @@ summary(fit)
   document.currentScript,
     `penguins |>
   group_by(species, island) |>
-  summarise(avg_mass = mean(body_mass_g, na.rm = TRUE))`,
-    { height: 100, canvas: { width: 1000, height: 500 } }
+  summarise(
+    avg_mass = mean(body_mass_g, na.rm = TRUE)
+  )`,
+    { height: 150, canvas: { width: 1000, height: 700 } }
   );
 </script>
 ```
+
+:::
+
+::::
+
+
 
 ## Live and interactive R plotting
 
@@ -279,164 +121,44 @@ summary(fit)
 <script>
   insertAceWebR(
   document.currentScript,
-    `ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
-  geom_point(aes(color = species, shape = species), size = 3, na.rm = TRUE) +
-  labs(title = "Penguin size, Palmer Station LTER",
-       subtitle = "Flipper length and body mass for Adelie, Chinstrap and Gentoo Penguins",
-       x = "Flipper length (mm)", y = "Body mass (g)",
-       color = "Penguin species", shape = "Penguin species")`,
-    { height: 180, canvas: { width: 1000, height: 500 } }
+    `
+    penguins |>
+      ggplot(aes(x = flipper_length_mm, y = body_mass_g)) +
+      geom_point(aes(color = species, shape = species), size = 3, na.rm = TRUE) +
+      labs(title = "Penguin size, Palmer Station LTER",
+        subtitle = "Flipper length and body mass for Adelie, Chinstrap and Gentoo Penguins",
+        x = "Flipper length (mm)", y = "Body mass (g)",
+        color = "Penguin species", shape = "Penguin species"
+      )`,
+    { height: 250, canvas: { width: 1000, height: 500 } }
   );
 </script>
 ```
-
-
-## Modern text rendering features and internationalisation
-```{=html}
-<script>
-  insertAceWebR(
-  document.currentScript,
-    `plot(rnorm(1000), rnorm(1000), col=rgb(0,0,0,0.5),
-     xlim=c(-5, 5), ylim=c(-5, 5), main="This is the title 🚀",
-     xlab="This is the x label", ylab="This is the y label",
-     family="Futura")
-text(-4, 4, "This is English", family="serif")
-text(-4, -4, "هذا مكتوب باللغة العربية")
-text(4, 4, "これは日本語です")
-text(4, -4, "זה כתוב בעברית")`,
-    { height: 235, canvas: { width: 1008, height: 600 } }
-  );
-</script>
-```
-
-## Modern text rendering features and internationalisation
-
--   Any font family available to the web browser can be used in plots
-
--   Accurate font metrics for text sizing and positioning
-
--   Advanced text features such as ligatures & colour emoji 😃
-
--   RTL text and automatic font fallback for international scripts
-
-## Integration of webR with other web frameworks
-
-``` {.javascript style="font-size: 150%"}
-const ret = await webR.evalR("penguins");
-const data = await ret.toJs();
-const penguins = data.values[0].values.map((_, idx) => {
-  return {
-    species: data.values[0].values[idx],
-    island: data.values[1].values[idx],
-    bill_length_mm: data.values[2].values[idx],
-    bill_depth_mm: data.values[3].values[idx],
-    sex: data.values[6].values[idx],
-  }
-});
-
-Plot.dot(penguins, {
-  x: "bill_length_mm",
-  y: "bill_depth_mm",
-  stroke: "species", symbol: "species",
-  channels: {island: "island", sex: "sex"},
-  tip: true
-}).plot({ grid: true, symbol: { legend: true } })
-```
-
-## Integration of webR with other web frameworks
-
-::: {class="scale-1-9x"}
-
-```{=html}
-<div class="plot-obs" id="plot-observable">Loading...</div>
-<script type="module">
-import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6/+esm";
-
-// Setup
-await webRReady;
-document.getElementById('plot-observable').innerHTML = '';
-await webR.evalRVoid(`
-  webr::install("palmerpenguins")
-  library(palmerpenguins)
-`);
-await webR.evalRVoid("penguins$species <- as.character(penguins$species)");
-await webR.evalRVoid("penguins$island <- as.character(penguins$island)");
-await webR.evalRVoid("penguins$sex <- as.character(penguins$sex)");
-
-// Plotting
-const ret = await webR.evalR("penguins");
-const data = await ret.toJs();
-const penguins = data.values[0].values.map((_, idx) => {
-  return {
-    species: data.values[0].values[idx],
-    island: data.values[1].values[idx],
-    bill_length_mm: data.values[2].values[idx],
-    bill_depth_mm: data.values[3].values[idx],
-    sex: data.values[6].values[idx],
-  }
-});
-
-document.getElementById("plot-observable").append(
-  Plot.dot(
-    penguins,
-    {
-      x: "bill_length_mm",
-      y: "bill_depth_mm",
-      stroke: "species", symbol: "species",
-      channels: {island: "island", sex: "sex"},
-      tip: true
-    },
-  ).plot({ grid: true, symbol: { legend: true } })
-)
-
-</script>
-```
-:::
 
 ## R packages
 
-Binary R packages for Wasm are available, hosed at <https://repo.r-wasm.org>
+- Binary R packages for Wasm are available, hosed at <https://repo.r-wasm.org>
+- **webR 0.2.1:** 10324 packages (about 51% of CRAN) 
+- Note: not all have been tested
 
 ::: {style="text-align: center"}
-![](images/repo.png){style="width: 60%"}
+![](images/repo.png){style="width: 50%"}
 :::
 
-**webR 0.2.1:** 10324 packages (about 51% of CRAN) - Note: not all have been tested
-
-## Shiny in webR
-
-[Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) are a JavaScript API that enables Shiny to work with webR.
-
-Tricky to set up, especially for non-JavaScript developers.
-
-::: {style="text-align: center"}
-![](images/standalone.png){style="width: 80%; border: 1px solid #889; box-shadow: 2px 2px 15px #889;"}
-:::
 
 # Getting started with Shinylive for R
+
 Anyone can create their own serverless Shiny apps!
 
 ## Anyone can create their own serverless Shiny apps!
 
-. . .
+1. [Shinylive online editor](https://shinylive.io/r/examples/)
 
-::: {style="text-align: center; font-size: 150%; margin-top:1em;"}
-Option 1: [Shinylive online editor](https://shinylive.io/r/examples/)
-:::
+2. [Convert a Shiny app](https://github.com/posit-dev/r-shinylive)
 
-. . .
+3. [Embed a Shiny app with Quarto](https://github.com/quarto-ext/shinylive)
 
-::: {style="text-align: center; font-size: 150%; margin-top:1em;"}
-Option 2: [Convert a Shiny app](https://github.com/posit-dev/r-shinylive)
-:::
-
-. . .
-
-::: {style="text-align: center; font-size: 150%; margin-top:1em;"}
-Option 3: [Embed a Shiny app with Quarto](https://github.com/quarto-ext/shinylive)
-:::
-
-## Shinylive Online editor <span style="font-size: 50%">🔗 <https://shinylive.io/r/examples/></span>
+## Shinylive Online editor [🔗 <https://shinylive.io/r/examples/>]{style="font-size: 50%"}
 
 ::: {style="text-align: center"}
 ![](images/shinylive-editor.png){style="width: 90%; border: 1px solid #889; box-shadow: 2px 2px 15px #889;"}
@@ -454,53 +176,18 @@ Share a Shiny app with anyone using a single URL: [Example Shinylive App](https:
 
 <small>[🔗 App source code](https://gist.github.com/wch/e62218aa28bf26e785fc6cb99efe8efe)</small>
 
-
-## Convert a Shiny app
-
-Install the [Shinylive R package](https://github.com/posit-dev/r-shinylive):
-
-```{.r style="font-size: 200%"}
-install.packages("pak")
-
-pak:pak("posit-dev/r-shinylive")
-```
-
-. . .
-
-<br>
-Convert the app:
-```{.r style="font-size: 200%"}
-shinylive::export("myapp", "site")
-```
-
----
-
-Preview the application:
-```{.r style="font-size: 200%"}
-httpuv::runStaticServer("site")
-```
-
-<br>Static file output:
-
-::: {style="text-align: center"}
-![](images/files.jpg){style="width: 50%"}
-:::
-
-Ready to be uploaded to GitHub Pages or other static web hosting
-
 ## Shinylive Quarto extension
 
 First, in a terminal run the command:
 
-```{.bash style="font-size: 200%; margin-top:1em;"}
+``` shell
 quarto add quarto-ext/shinylive
 ```
 
----
 
-### Insert your Shiny app directly into the Quarto document
+Insert your app into the Quarto document using a `{shinylive-r} chunk
 
-````{.md code-line-numbers="5-19"}
+```` {.md code-line-numbers="5-19"}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
 nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
@@ -526,7 +213,7 @@ fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
 culpa qui officia deserunt mollit laborum.
 ````
 
----
+## Shiny running live in the browser
 
 ```{shinylive-r}
 #| standalone: true
@@ -589,23 +276,19 @@ shinyApp(ui = ui, server = server)
 
 ## Future work and current issues
 
-* Shinylive is [experimental!]{.em} Things are still very much in flux
+-   Shinylive is [experimental!]{.em} Things are still very much in flux
 
-. . .
+-   Loading R packages works, but is very slow. We're working on it!
 
-* Loading R packages works, but is very slow. We're working on it!
+-   Not all R packages work in Wasm
 
-* Not all R packages work in Wasm
+-   Browser security restrictions: very limited networking, no raw socket access
 
-* Browser security restrictions: very limited networking, no raw socket access
+-   Moving data into and out of the virtual Wasm environment is clunky right now (at best!)
 
-* Moving data into and out of the virtual Wasm environment is clunky right now (at best!)
+-   There are no secrets with a Shinylive app!
 
-. . .
-
-* There are no secrets with a Shinylive app!
-
----
+------------------------------------------------------------------------
 
 ### 🔗 webR demo website {style="padding-top: 1em;"}
 
@@ -626,5 +309,3 @@ shinyApp(ui = ui, server = server)
 <https://github.com/posit-dev/shinylive>
 
 <https://github.com/quarto-ext/shinylive>
-
-
